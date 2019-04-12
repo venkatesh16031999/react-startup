@@ -1,0 +1,30 @@
+.Navigation{
+	width: 100%;
+	height: 7%;
+	display: flex;
+	justify-content: space-between;
+	box-sizing: border-box;
+	z-index: 90;
+	font: bold;
+	text-transform: uppercase;
+	color: white;
+	background-color: #703b09;
+	position: fixed;
+	top: 0%;
+	left: 0%;
+	align-items: center;
+}
+.Navigation nav{
+		height: 100%;
+}
+
+.Logo{
+	height: 80%;
+}
+
+@media (max-width: 500px){
+	.nav{
+		display: none;
+	}
+	
+}

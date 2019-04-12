@@ -1,0 +1,57 @@
+.Navcomponents{
+	width: 100%;
+	margin: 10px 0px;
+	display: block;
+	box-sizing: border-box;
+	
+	
+
+
+}
+
+.Navcomponents a{
+	color: #8f5C2C;
+	width: 100%;
+	text-decoration: none;
+	display: block;
+	font-weight: bold;
+	
+}
+
+.Navcomponents a:hover,
+.Navcomponents a:active,
+.Navcomponents a.active{
+	
+	color: black;
+}
+
+@media (min-width: 500px){
+	.Navcomponents{
+	height: 100%;
+	margin: 0;
+	width: auto;
+	display: flex;
+	align-items: center;
+
+
+
+}
+
+.Navcomponents a{
+	color: white;
+	height: 100%;
+	margin-left: 10px;
+	display: flex;
+	align-items: center;
+	padding:0 4px;
+}
+
+.Navcomponents a:hover,
+.Navcomponents a:active,
+.Navcomponents a.active{
+	background-color: #8f5C2C;
+	border-bottom: 4px solid black;
+	color: black;
+}
+
+}

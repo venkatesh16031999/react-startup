@@ -3,6 +3,8 @@ import Auxillary from '../../hoc/Auxillary/Auxillary';
 
 import Burger from '../../components/Burger/Burger';
 import Buildcontrols from '../../components/Burger/Buildcontrols/Buildcontrols' ;
+import Model from '../../components/UI/Model/Model';
+import Ordersummary from '../../components/Burger/Ordersummary/Ordersummary';
 
 const INGREDIENTPRICE={
 		cheese:20,
@@ -20,7 +22,25 @@ class Burgerbuilder extends Component{
 		meat:0,
 		},
 		totalprice:0,
-		purchase:false
+		purchase:false,
+		Modelshow:false
+	}
+
+	continuebuttonHandler=()=>{
+			alert("Continue process");
+	
+	}
+
+	modelcloseHandler=()=>{
+		this.setState({
+			Modelshow:false
+		})
+	}
+
+	modelviewHandler=()=>{
+		this.setState({
+			Modelshow:true
+		})
 	}
 
 	purchasevalidation(countofinc){
@@ -83,6 +103,13 @@ class Burgerbuilder extends Component{
 
 		return (
 			<Auxillary>
+					<Model show={this.state.Modelshow} modelclose={this.modelcloseHandler}>
+						<Ordersummary 
+						ingredient={this.state.ingredients}
+						modelclose={this.modelcloseHandler}
+						continue={this.continuebuttonHandler}
+						amount={this.state.totalprice} />
+					</Model>
 
 					<Burger items={this.state.ingredients}/>
 					
@@ -91,6 +118,7 @@ class Burgerbuilder extends Component{
 					lessingredients={this.removingincredientHandler} 
 					disablelessbutton={disableinfo}
 					purchasetest={this.state.purchase}
+					modelview={this.modelviewHandler}
 					totalamount={this.state.totalprice} />
 
 			</Auxillary>

@@ -16,7 +16,7 @@ import classes from './Buildcontrols.css';
 
 const Buildcontrols=(props)=>(
 	  <div className={classes.Buildcontrols}>
-	  			<p>The Burger price:{props.totalamount}</p>
+	  			<p>The Burger price:{props.totalamount.toFixed(2)}</p>
 				{controllabel.map(ctrl=>{
 					return (<Controlbutton 
 						key={ctrl.label} 
@@ -25,7 +25,10 @@ const Buildcontrols=(props)=>(
 						removing={()=>{props.lessingredients(ctrl.type)}}
 						disable={props.disablelessbutton[ctrl.type]} />)
 				})}
-					<button className={classes.OrderButton} disabled={!props.purchasetest}>Order Now</button>
+					<button 
+					className={classes.OrderButton} 
+					disabled={!props.purchasetest}
+					onClick={props.modelview}>Order Now</button>
 			</div>
 		)
 

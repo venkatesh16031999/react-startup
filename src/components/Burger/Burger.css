@@ -14,6 +14,7 @@
 	.Burger{
 		width: 250px;
 		height: 245px;
+		margin-top:15%; 
 	}
 }
 
@@ -21,6 +22,7 @@
 	.Burger{
 		width: 250px;
 		height: 250px;
+		margin-top: 8%;
 	}
 }
 
@@ -28,6 +30,7 @@
 	.Burger{
 		width: 350px;
 		height: 400px;
+		margin-top: 5%;
 	}
 }
 
@@ -37,6 +40,7 @@
 	.Burger{
 		width: 450px;
 		height: 400px;
+		margin-top: 5%;
 	}
 }
 
