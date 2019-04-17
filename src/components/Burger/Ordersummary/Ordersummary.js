@@ -1,12 +1,17 @@
-import React from 'react';
+import React,{Component} from 'react';
 import Auxillary from '../../../hoc/Auxillary/Auxillary';
 import Button from '../../UI/Buttons/Button';
 
-const Ordersummary=(props)=>{
-		const Ingredients=Object.keys(props.ingredient)
+class Ordersummary extends Component{
+	componentWillUpdate(){
+		console.log("Ordersummary updated");
+	}
+
+	render(){
+		const Ingredients=Object.keys(this.props.ingredient)
 		.map((itemkeys)=>{
 			return (<li>
-					{itemkeys}:{props.ingredient[itemkeys]}
+					{itemkeys}:{this.props.ingredient[itemkeys]}
 				</li>)
 		});
 
@@ -16,14 +21,13 @@ const Ordersummary=(props)=>{
 				<ul>
 					{Ingredients}
 				</ul>
-				<p>Total Cost:{props.amount.toFixed(2)}</p>
+				<p>Total Cost:{this.props.amount.toFixed(2)}</p>
 				<h3>Conform Your Order?</h3>
-				<Button btntype='Danger' click={props.modelclose}>CANCEL</Button>
-				<Button btntype='Success' click={props.continue}>CONTINUE</Button>
+				<Button btntype='Danger' click={this.props.modelclose}>CANCEL</Button>
+				<Button btntype='Success' click={this.props.continue}>CONTINUE</Button>
 
 			</Auxillary>
-		
-
+		}
 }
 
 export default Ordersummary;

@@ -11,9 +11,10 @@ const Burger=(props)=>{
 				return <Burgeringredient  key={itemkeys + i} type={itemkeys}/>
 				})
 		}
-	).reduce((acc,el)=>{
-		return acc.concat(el);
-	},[]);
+	)
+	//.reduce((acc,el)=>{
+		//return acc.concat(el);
+	//},[]);
 	//if(props.items===0){
 		//noofingredient=<p>dgd</p>
 	//}

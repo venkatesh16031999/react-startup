@@ -5,6 +5,9 @@ import Burger from '../../components/Burger/Burger';
 import Buildcontrols from '../../components/Burger/Buildcontrols/Buildcontrols' ;
 import Model from '../../components/UI/Model/Model';
 import Ordersummary from '../../components/Burger/Ordersummary/Ordersummary';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import witherrorHandler from '../../hoc/witherrorHandler/witherrorHandler';
+import axios from '../../axiosinstances';
 
 const INGREDIENTPRICE={
 		cheese:20,
@@ -15,19 +18,45 @@ const INGREDIENTPRICE={
 
 class Burgerbuilder extends Component{
 	state={
-		ingredients:{
-		cheese:0,
-		salad:0,
-		bacon:0,
-		meat:0,
-		},
+		ingredients:null,
 		totalprice:0,
 		purchase:false,
-		Modelshow:false
+		Modelshow:false,
+		showspinner:false,
+		error:null
+	}
+
+	componentDidMount(){
+		axios.get('https://reactburger-3c563.firebaseio.com/ingredients.json').then(response=>{
+			
+				this.setState({ingredients:response.data});
+		}).catch(error=>{this.setState({error:true})});
 	}
 
 	continuebuttonHandler=()=>{
-			alert("Continue process");
+			//alert("Continue process");
+			// const data={
+			// 	ingredient:this.state.ingredients,
+			// 	totalprice:this.state.totalprice,
+			// 	customer:{
+			// 		name:'venkatesh',
+			// 		address:{
+			// 			street:'strret1',
+			// 			zipcode:'641016',
+			// 		},
+			// 		email:'xyz@gmail.com'
+			// 	},
+			// }
+
+			// axios.post('/orders',data)
+			// .then(response=>this.setState({
+			// 	showspinner:true,Modelshow:false
+			// }))
+			// .catch(error=>this.setState({
+			// 	showspinner:false,Modelshow:false
+			// }));
+			this.props.history.push("/Checkout");
+
 	
 	}
 
@@ -39,7 +68,8 @@ class Burgerbuilder extends Component{
 
 	modelviewHandler=()=>{
 		this.setState({
-			Modelshow:true
+			Modelshow:true,
+			showspinner:false
 		})
 	}
 
@@ -95,22 +125,20 @@ class Burgerbuilder extends Component{
 		this.purchasevalidation(countofinc);
 	}
 
+
 	render(){
 		let disableinfo={...this.state.ingredients};
 		for (let items in disableinfo){
 			disableinfo[items]=disableinfo[items]<=0;
 		}
 
-		return (
-			<Auxillary>
-					<Model show={this.state.Modelshow} modelclose={this.modelcloseHandler}>
-						<Ordersummary 
-						ingredient={this.state.ingredients}
-						modelclose={this.modelcloseHandler}
-						continue={this.continuebuttonHandler}
-						amount={this.state.totalprice} />
-					</Model>
+		let ordersummary=null;
+			
 
+			let burger=this.state.error ? <p>404 error</p> : <Spinner />
+
+			if(this.state.ingredients){
+				burger= (<Auxillary>
 					<Burger items={this.state.ingredients}/>
 					
 					<Buildcontrols 
@@ -120,10 +148,30 @@ class Burgerbuilder extends Component{
 					purchasetest={this.state.purchase}
 					modelview={this.modelviewHandler}
 					totalamount={this.state.totalprice} />
+				</Auxillary>)
+				ordersummary=<Ordersummary 
+						ingredient={this.state.ingredients}
+						modelclose={this.modelcloseHandler}
+						continue={this.continuebuttonHandler}
+						amount={this.state.totalprice} />;
+
+			}
+			if(this.state.showspinner){
+				ordersummary=<Spinner />
+			}
+			
+
+		return (
+			<Auxillary>
+					<Model show={this.state.Modelshow} modelclose={this.modelcloseHandler}>
+						{ordersummary}
+					</Model>
+
+					{burger}
 
 			</Auxillary>
 			);
 	}
 }
 
-export default Burgerbuilder;
+export default witherrorHandler(Burgerbuilder,axios);
