@@ -1,0 +1,9 @@
+.Ordercomponent{
+	width:80%;
+	margin: 10px auto;
+	box-sizing: border-box;
+	padding: 10px;
+	box-shadow: 0 2px 3px grey;
+	border-radius: 5px;
+
+}

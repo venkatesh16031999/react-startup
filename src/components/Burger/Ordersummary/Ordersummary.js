@@ -9,8 +9,8 @@ class Ordersummary extends Component{
 
 	render(){
 		const Ingredients=Object.keys(this.props.ingredient)
-		.map((itemkeys)=>{
-			return (<li>
+		.map((itemkeys,i)=>{
+			return (<li key={itemkeys+i}>
 					{itemkeys}:{this.props.ingredient[itemkeys]}
 				</li>)
 		});

@@ -2,9 +2,17 @@
 	text-align: center;
 	width: 80%;
 	margin: auto;
+	
+}
+.button{
+	margin-top: -40px;
 }
 @media (min-width: 600px){
 	.Checkoutsummary{
 		width: 500px;
+		
 	}
+	.button{
+	margin-top: 100px;
+}
 }

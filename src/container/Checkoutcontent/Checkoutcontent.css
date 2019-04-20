@@ -1,0 +1,19 @@
+.Checkoutcontent{
+	margin: 60px auto;
+	text-align: center;
+	
+	width: 80%;
+	display: block;
+	box-sizing: border-box;
+	padding: 20px;
+	box-shadow: 0 2px 3px black;
+}
+.input{
+	display: block;
+}
+
+@media (min-width: 600px){
+	.Checkoutcontent{
+		width: 500px;
+	}
+} 
