@@ -8,12 +8,53 @@ import axios from 'axios';
 
 class Checkoutcontent extends Component{
 	state={
-		name:'',
-		email:'',
-		address:{
-			street:'',
-			postalcode:''
+		orderform:{
+			name:{
+				elementType: 'input',
+				elementConfig:{
+					type: 'text',
+					placeholder: 'Your Name'
+				},
+				value: ''
+			},
+			email:{
+				elementType: 'input',
+				elementConfig:{
+					type: 'email',
+					placeholder: 'Your mail'
+				},
+				value: ''
+			},
+			street:{
+				elementType: 'input',
+				elementConfig:{
+					type: 'text',
+					placeholder: 'Your StreetName'
+				},
+				value: ''
+			},
+			pincode:{
+				elementType: 'input',
+				elementConfig:{
+					type: 'text',
+					placeholder: 'Pincode'
+				},
+				value: ''
+			},
+			deliverymode:{
+				elementType: 'select',
+				elementConfig:{
+					options:[
+					{value:'fastest',displayValue:'fastest'},
+					{value:'cheapest',displayValue:'cheapest'}
+					]
+				},
+				value: ''
+			},
+
+
 		},
+		
 		showspinner:false
 	}
 
@@ -23,14 +64,7 @@ class Checkoutcontent extends Component{
 		const data={
 				ingredient:this.props.ingredients,
 				totalprice:this.props.price,
-				customer:{
-					name:'venkatesh',
-					address:{
-						street:'strret1',
-						zipcode:'641016',
-					},
-					email:'xyz@gmail.com'
-				},
+				
 			}
 
 			axios.post('https://reactburger-3c563.firebaseio.com/orders.json',data)
@@ -46,12 +80,41 @@ class Checkoutcontent extends Component{
 	
 
 	render(){
+			const formarray=[];
+			for(let key in this.state.orderform){
+				formarray.push({
+					config:this.state.orderform[key],
+					id:key,
+				})
+			}
+
+			 formarray.map(element=>{
+			 	return(
+			 		<Input
+			 		key={element.id}
+			 		 elementType={element.config.elementType}
+			 		 elementConfig={element.config.elementConfig}
+			 		 value={element.config.value} />)
+			 		}
+			 		);
+			
+
+
 			let form=(
 		<form>
-			<Input  type="text" name="Name" placeholder="Name" />
-			<Input  type="email" name="Email" placeholder="Email" />
-			<Input  type="text" name="Street" placeholder="Street" />
-			<Input  type="text" name="Pincode" placeholder="Pincode" />
+			
+				{ formarray.map(element=>{
+			 	return(
+			 		<Input
+			 		key={element.id}
+			 		 elementType={element.config.elementType}
+			 		 elementConfig={element.config.elementConfig}
+			 		 value={element.config.value} />)
+			 		}
+			 		)}
+
+			
+			
 			<Button  btntype="Success" click={this.orderHandler}>Order</Button>
 		</form>
 					);
