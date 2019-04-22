@@ -15,7 +15,13 @@ class Checkoutcontent extends Component{
 					type: 'text',
 					placeholder: 'Your Name'
 				},
-				value: ''
+				value: '',
+				validation:{
+					required:true,
+					minLength:5
+				},
+				valid:false,
+				touch:false
 			},
 			email:{
 				elementType: 'input',
@@ -23,7 +29,13 @@ class Checkoutcontent extends Component{
 					type: 'email',
 					placeholder: 'Your mail'
 				},
-				value: ''
+				value: '',
+				validation:{
+					required:true,
+					minLength:5
+				},
+				valid:false,
+				touch:false
 			},
 			street:{
 				elementType: 'input',
@@ -31,7 +43,13 @@ class Checkoutcontent extends Component{
 					type: 'text',
 					placeholder: 'Your StreetName'
 				},
-				value: ''
+				value: '',
+				validation:{
+					required:true,
+					minLength:5
+				},
+				valid:false,
+				touch:false
 			},
 			pincode:{
 				elementType: 'input',
@@ -39,7 +57,13 @@ class Checkoutcontent extends Component{
 					type: 'text',
 					placeholder: 'Pincode'
 				},
-				value: ''
+				value: '',
+				validation:{
+					required:true,
+					minLength:5
+				},
+				valid:false,
+				touch:false
 			},
 			deliverymode:{
 				elementType: 'select',
@@ -49,21 +73,46 @@ class Checkoutcontent extends Component{
 					{value:'cheapest',displayValue:'cheapest'}
 					]
 				},
-				value: ''
+				value: '',
+				valid:true
 			},
 
 
 		},
 		
-		showspinner:false
+		showspinner:false,
+		formisvalid:false
+	}
+
+	checkvalidity(value,rules){
+		let isValid=true;
+		
+
+
+		if(rules.required){
+			isValid=value.trim()!==''&& isValid;
+		}
+		if(rules.minLength){
+			isValid=value.length>=rules.minLength&& isValid; 
+		}
+
+
+		return isValid
 	}
 
 	orderHandler=(event)=>{
 		event.preventDefault();
-		this.setState({showspinner:true})
+		this.setState({showspinner:true});
+		const forminfo={};
+		for(let formelement in this.state.orderform){
+			forminfo[formelement]=this.state.orderform[formelement].value;
+		
+		}
+
 		const data={
 				ingredient:this.props.ingredients,
 				totalprice:this.props.price,
+				formdata:forminfo,
 				
 			}
 
@@ -77,6 +126,26 @@ class Checkoutcontent extends Component{
 			}));
 	}
 	
+	forminputchangeHandler=(event,index)=>{
+		const updatedform={...this.state.orderform};
+		const updatedformelement={...updatedform[index]}
+		updatedformelement.value=event.target.value;
+		updatedformelement.touch=true;
+		updatedformelement.valid=this.checkvalidity(updatedformelement.value,updatedformelement.validation);
+		updatedform[index]=updatedformelement;
+
+		let formisvalid=true;
+		for(let index in updatedform){
+			formisvalid=updatedform[index].valid&&formisvalid
+		}
+		console.log(formisvalid);
+		
+		this.setState({
+			orderform:updatedform,
+			formisvalid:formisvalid
+		});
+
+	}
 	
 
 	render(){
@@ -88,20 +157,8 @@ class Checkoutcontent extends Component{
 				})
 			}
 
-			 formarray.map(element=>{
-			 	return(
-			 		<Input
-			 		key={element.id}
-			 		 elementType={element.config.elementType}
-			 		 elementConfig={element.config.elementConfig}
-			 		 value={element.config.value} />)
-			 		}
-			 		);
-			
-
-
 			let form=(
-		<form>
+		<form onSubmit={this.orderHandler}>
 			
 				{ formarray.map(element=>{
 			 	return(
@@ -109,13 +166,17 @@ class Checkoutcontent extends Component{
 			 		key={element.id}
 			 		 elementType={element.config.elementType}
 			 		 elementConfig={element.config.elementConfig}
-			 		 value={element.config.value} />)
+			 		 value={element.config.value} 
+			 		 invalid={!element.config.valid}
+			 		 validation={element.config.validation}
+			 		 touch={element.config.touch}
+			 		 changed={(event)=>{this.forminputchangeHandler(event,element.id)}}/>)
 			 		}
 			 		)}
 
 			
 			
-			<Button  btntype="Success" click={this.orderHandler}>Order</Button>
+			<Button disabled={!this.state.formisvalid} btntype="Success">Order</Button>
 		</form>
 					);
 	if(this.state.showspinner){

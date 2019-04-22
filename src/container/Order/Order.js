@@ -40,6 +40,7 @@ class Order extends Component{
 					<Ordercomponent 
 					key={order.id}
 					Ingredients={order.ingredient}
+					
 					price={+order.totalprice} />
 				)
 			)
