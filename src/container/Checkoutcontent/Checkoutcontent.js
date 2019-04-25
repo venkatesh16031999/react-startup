@@ -4,6 +4,7 @@ import Button from '../../components/UI/Buttons/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Input from '../../components/UI/Input/Input';
 import { withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 import axios from 'axios';
 
 class Checkoutcontent extends Component{
@@ -86,7 +87,7 @@ class Checkoutcontent extends Component{
 
 	checkvalidity(value,rules){
 		let isValid=true;
-		
+		 
 
 
 		if(rules.required){
@@ -110,7 +111,7 @@ class Checkoutcontent extends Component{
 		}
 
 		const data={
-				ingredient:this.props.ingredients,
+				ingredient:this.props.ing,
 				totalprice:this.props.price,
 				formdata:forminfo,
 				
@@ -193,5 +194,12 @@ class Checkoutcontent extends Component{
 			);
 	}
 }
+const mapStateToProps=state=>{
+	return{
+		ing:state.ingredients,
+		price:state.totalprice
+	}
+}
 
-export default withRouter(Checkoutcontent);
+
+export default connect(mapStateToProps)(withRouter(Checkoutcontent));

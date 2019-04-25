@@ -1,5 +1,7 @@
 import React,{Component} from 'react';
 import Auxillary from '../../hoc/Auxillary/Auxillary';
+import {connect} from 'react-redux';
+import * as actionTypes from '../../store/actionTypes';
 
 import Burger from '../../components/Burger/Burger';
 import Buildcontrols from '../../components/Burger/Buildcontrols/Buildcontrols' ;
@@ -18,9 +20,6 @@ const INGREDIENTPRICE={
 
 class Burgerbuilder extends Component{
 	state={
-		ingredients:null,
-		totalprice:0,
-		purchase:false,
 		Modelshow:false,
 		showspinner:false,
 		error:null
@@ -34,21 +33,7 @@ class Burgerbuilder extends Component{
 	}
 
 	continuebuttonHandler=()=>{
-			//alert("Continue process");
-			
-			const queryParams=[];
-		
-			for(let items in this.state.ingredients){
-				queryParams.push(encodeURIComponent(items) + '=' + encodeURIComponent(this.state.ingredients[items]));
-			}
-			queryParams.push('price=' + this.state.totalprice);
-			const queryString=queryParams.join('&');
-
-
-			this.props.history.push({
-				pathname :'/Checkout',
-				search : '?' + queryString,
-			});
+			this.props.history.push('/Checkout');
 
 	
 	}
@@ -66,61 +51,22 @@ class Burgerbuilder extends Component{
 		})
 	}
 
-	purchasevalidation(countofinc){
-		const purchasecheck=Object.keys(countofinc)
+	purchasevalidation(ingredients){
+		const purchasecheck=Object.keys(ingredients)
 		.map((itemkeys)=>{
-			return countofinc[itemkeys]
+			return ingredients[itemkeys]
 		}).reduce((acc,ele)=>{
 			return acc + ele;
 		},0);
-		this.setState({
-			purchase:purchasecheck > 0
-		});
+	
+		return purchasecheck > 0
+		
 
-	}
-
-	addingincredientHandler=(type)=>{
-		const oldcount=this.state.ingredients[type];
-		const updatedcount=oldcount + 1;
-		const countofinc={
-			...this.state.ingredients
-		};
-		countofinc[type]=updatedcount;
-		const priceaddition=INGREDIENTPRICE[type];
-		const Totalprice=this.state.totalprice;
-		const newprice=Totalprice + priceaddition;
-
-		this.setState({
-			ingredients:countofinc,
-			totalprice:newprice,
-		});
-		this.purchasevalidation(countofinc);
-	}
-
-	removingincredientHandler=(type)=>{
-		const oldcount=this.state.ingredients[type];
-		const updatedcount=oldcount - 1;
-		if(oldcount<=0){
-			return;
-		}
-		const countofinc={
-			...this.state.ingredients
-		};
-		countofinc[type]=updatedcount;
-		const pricededuction=INGREDIENTPRICE[type];
-		const Totalprice=this.state.totalprice;
-		const newprice=Totalprice - pricededuction;
-
-		this.setState({
-			ingredients:countofinc,
-			totalprice:newprice,
-		});
-		this.purchasevalidation(countofinc);
 	}
 
 
 	render(){
-		let disableinfo={...this.state.ingredients};
+		let disableinfo={...this.props.ing};
 		for (let items in disableinfo){
 			disableinfo[items]=disableinfo[items]<=0;
 		}
@@ -130,23 +76,23 @@ class Burgerbuilder extends Component{
 
 			let burger=this.state.error ? <p>404 error</p> : <Spinner />
 
-			if(this.state.ingredients){
+			if(this.props.ing){
 				burger= (<Auxillary>
-					<Burger items={this.state.ingredients}/>
+					<Burger items={this.props.ing}/>
 					
 					<Buildcontrols 
-					moreingredients={this.addingincredientHandler}
-					lessingredients={this.removingincredientHandler} 
+					moreingredients={this.props.addingincredient}
+					lessingredients={this.props.removingincredient} 
 					disablelessbutton={disableinfo}
-					purchasetest={this.state.purchase}
+					purchasetest={this.purchasevalidation(this.props.ing)}
 					modelview={this.modelviewHandler}
-					totalamount={this.state.totalprice} />
+					totalamount={this.props.price} />
 				</Auxillary>)
 				ordersummary=<Ordersummary 
-						ingredient={this.state.ingredients}
+						ingredient={this.props.ing}
 						modelclose={this.modelcloseHandler}
 						continue={this.continuebuttonHandler}
-						amount={this.state.totalprice} />;
+						amount={this.props.price} />;
 
 			}
 			if(this.state.showspinner){
@@ -167,4 +113,18 @@ class Burgerbuilder extends Component{
 	}
 }
 
-export default witherrorHandler(Burgerbuilder,axios);
+const mapStateToProps=state=>{
+	return{
+		ing:state.ingredients,
+		price:state.totalprice
+	}
+}
+
+const mapDispatchToProps=dispatch=>{
+	return{
+		addingincredient: (ingName)=>dispatch({type:actionTypes.ADD_INGREDIENTS,ingName:ingName}),
+		removingincredient: (ingName)=>dispatch({type:actionTypes.REMOVE_INGREDIENTS,ingName:ingName})
+	}
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(witherrorHandler(Burgerbuilder,axios));
